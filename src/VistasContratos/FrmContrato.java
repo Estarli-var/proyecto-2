@@ -8,14 +8,14 @@ package VistasContratos;
  *
  * @author Aaron Diaz
  */
-public class FrmContratos extends javax.swing.JFrame {
+public class FrmContrato extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContratos.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContrato.class.getName());
 
     /**
      * Creates new form FrmContratos
      */
-    public FrmContratos() {
+    public FrmContrato() {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -124,6 +124,12 @@ public class FrmContratos extends javax.swing.JFrame {
         pnlCliente.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
 
         txtIdentificacionCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtIdentificacionCliente.setToolTipText("Ingrese la identificacion sin guiones");
+        txtIdentificacionCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdentificacionClienteKeyTyped(evt);
+            }
+        });
 
         btnValidarCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnValidarCliente.setText("Validar");
@@ -168,7 +174,7 @@ public class FrmContratos extends javax.swing.JFrame {
 
         cmbTipoEspacio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cmbTipoEspacio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pequeño", "Mediano", "Grande" }));
-        cmbTipoEspacio.setToolTipText("Tipo");
+        cmbTipoEspacio.setToolTipText("Selecciones el tipo de espacio a alquilar");
 
         btnBuscarDisponible.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnBuscarDisponible.setText("Buscar disponibles");
@@ -211,6 +217,7 @@ public class FrmContratos extends javax.swing.JFrame {
         dateFechaInicio.setDateFormatString("dd/MM/yyyy");
         dateFechaInicio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
+        dateFechaFinal.setToolTipText("\n");
         dateFechaFinal.setDateFormatString("dd/MM/yyyy");
         dateFechaFinal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -341,7 +348,6 @@ public class FrmContratos extends javax.swing.JFrame {
         lblSubTotal.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblSubTotal.setForeground(new java.awt.Color(0, 0, 0));
         lblSubTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSubTotal.setText("00");
 
         javax.swing.GroupLayout jplSubtotalLayout = new javax.swing.GroupLayout(jplSubtotal);
         jplSubtotal.setLayout(jplSubtotalLayout);
@@ -373,7 +379,6 @@ public class FrmContratos extends javax.swing.JFrame {
         lblImpuesto.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         lblImpuesto.setForeground(new java.awt.Color(0, 0, 0));
         lblImpuesto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblImpuesto.setText("00");
 
         javax.swing.GroupLayout jplImpuestoLayout = new javax.swing.GroupLayout(jplImpuesto);
         jplImpuesto.setLayout(jplImpuestoLayout);
@@ -405,7 +410,6 @@ public class FrmContratos extends javax.swing.JFrame {
         lblTotal.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         lblTotal.setForeground(new java.awt.Color(0, 0, 0));
         lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotal.setText("00");
 
         javax.swing.GroupLayout pnlTotalLayout = new javax.swing.GroupLayout(pnlTotal);
         pnlTotal.setLayout(pnlTotalLayout);
@@ -547,6 +551,19 @@ public class FrmContratos extends javax.swing.JFrame {
         buscar.setVisible(true);
     }//GEN-LAST:event_btnBuscarContratoActionPerformed
 
+    private void txtIdentificacionClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificacionClienteKeyTyped
+        // TODO add your handling code here
+        char tecla = evt.getKeyChar();
+        boolean esNumero = (tecla >= '0' && tecla <= '9');
+
+        if (esNumero == false) {
+            evt.consume();
+        }
+        if(txtIdentificacionCliente.getText().length() >= 10){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdentificacionClienteKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -569,7 +586,7 @@ public class FrmContratos extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmContratos().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmContrato().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

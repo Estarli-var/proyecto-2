@@ -191,7 +191,11 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Ingrese la identificacion sin guiones"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtIdentificacionClienteKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnValidarCliente">
           <Properties>
@@ -288,7 +292,7 @@
                 <StringItem index="2" value="Grande"/>
               </StringArray>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" value="Tipo"/>
+            <Property name="toolTipText" type="java.lang.String" value="Selecciones el tipo de espacio a alquilar"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -383,6 +387,7 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dateFechaFinal">
           <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="&#xa;"/>
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Arial" size="14" style="0"/>
@@ -635,7 +640,6 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="00"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -697,7 +701,6 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="00"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -759,7 +762,6 @@
                   <Color blue="0" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="00"/>
               </Properties>
             </Component>
           </SubComponents>
