@@ -65,6 +65,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         lblFiltroCliente.setText("   Cliente:");
 
         txtFiltroCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtFiltroCliente.setToolTipText("Ingrese la identificacion o Nombre");
 
         lblFiltroEspacio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblFiltroEspacio.setText("  Espacio:");
@@ -169,7 +170,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "N°", "Identificación", "Cliente", "Espacio", "Fecha de inicio", "Finaliza", "Estado"
+                "N° contrato", "Identificación", "Cliente", "Espacio", "Fecha de inicio", "Finaliza", "Estado"
             }
         ) {
             Class[] types = new Class [] {
