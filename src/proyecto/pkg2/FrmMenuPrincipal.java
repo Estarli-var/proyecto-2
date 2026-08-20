@@ -500,7 +500,6 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
         pnlFranjaEmpleados.setBackground(azulAcento);
         lblFlechaEmpleados.setForeground(gris);
 
-    // Resaltar solo la fila que se clickeó
         filaActiva.setBackground(celesteTenue);
         franjaActiva.setBackground(azulOscuro);
         flechaActiva.setForeground(azulOscuro);

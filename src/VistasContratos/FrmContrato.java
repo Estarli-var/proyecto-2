@@ -73,7 +73,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnBuscarContrato = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de Contratos");
         setResizable(false);
         setSize(new java.awt.Dimension(1000, 700));
