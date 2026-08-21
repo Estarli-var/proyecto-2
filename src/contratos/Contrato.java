@@ -8,7 +8,9 @@ import enumContratos.EstadoContrato;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
+import modelos.Servicio;
 
 /**
  *
@@ -16,11 +18,15 @@ import java.util.Date;
  */
 public class Contrato {
     private int contador = 1;
+    private double impuest = 0.13;
     private int NumeroContrato;
     private Date FechaInicio;
     private Date FechaFinal;
     private EstadoContrato Estado;
-
+    
+    
+    private ArrayList<Servicio> servicios;
+    
     private double SubTotal;
     private double Impuesto;
     private double Total;
@@ -31,6 +37,7 @@ public class Contrato {
     this.FechaInicio = FechaInicio;
     this.FechaFinal = FechaFinal;
     this.Estado = EstadoContrato.PENDIENTE;
+    this.servicios = new ArrayList<>();
     this.SubTotal = 0;
     this.Impuesto = 0;
     this.Total = 0;
@@ -55,6 +62,30 @@ public class Contrato {
         return (int)Math.ceil(dias / 30.0);
     }
     
+    public void calcularCostos(){
+    double precioServicios = 0;
+        for (Servicio serv : servicios) {
+            precioServicios += serv.getPrecio();
+        }
+        //falta espacio va debajo de este comentario
+        
+        double totalConImpuesto = precioServicios;
+        this.SubTotal = totalConImpuesto / (1 + impuest);
+        this.Impuesto = totalConImpuesto - this.SubTotal;
+        this.Total = totalConImpuesto;
+    }
+    
+    public boolean agregarServicio(Servicio servi){
+        return servicios.add(servi);
+    }
+    
+    public boolean quitarServicio(Servicio servi){
+        return servicios.remove(servi);
+    }
+    
+    public ArrayList<Servicio> getServicios(){
+        return servicios;
+    }
     
     public void activar() throws cambioEstadoInvalidoException{
         if (Estado != EstadoContrato.PENDIENTE) {
