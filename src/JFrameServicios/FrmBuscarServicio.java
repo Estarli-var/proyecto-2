@@ -22,6 +22,9 @@ public class FrmBuscarServicio extends javax.swing.JFrame {
      * Creates new form FrmBuscarServicio
      */
     public FrmBuscarServicio() {
+    initComponents();
+}
+    public FrmBuscarServicio(FrmServicios vistaPadre, controladorServicios controladorS) {
         initComponents();
         this.vistaPadre = vistaPadre;
         this.controladorS = controladorS;
