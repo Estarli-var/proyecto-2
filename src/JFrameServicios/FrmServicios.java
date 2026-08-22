@@ -64,7 +64,7 @@ public class FrmServicios extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de Servicios");
 
         pnlDatosServicio.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Servicio"));
