@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package VistasContratos;
-
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import modelos.Servicio;
+import modelos.ServiciosList;
 /**
  *
  * @author Aaron Diaz
@@ -11,13 +14,21 @@ package VistasContratos;
 public class FrmContrato extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContrato.class.getName());
-
+    private DefaultTableModel modeloTabla;
+    private ServiciosList catalogoServicios;
+    private ArrayList<Servicio> servicioSeleccionados;
     /**
      * Creates new form FrmContratos
      */
     public FrmContrato() {
         initComponents();
         setLocationRelativeTo(null);
+        modeloTabla = (DefaultTableModel) tblServiciosContrato.getModel();
+        modeloTabla.setRowCount(0);
+        
+        servicioSeleccionados = new ArrayList<>();
+        catalogoServicios = new ServiciosList();
+        cargarComboServicios();
     }
 
     /**
@@ -73,8 +84,9 @@ public class FrmContrato extends javax.swing.JFrame {
         btnBuscarContrato = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gestión de Contratos");
+        setResizable(false);
         setSize(new java.awt.Dimension(1000, 700));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -86,7 +98,6 @@ public class FrmContrato extends javax.swing.JFrame {
         jLabel2.setText("Estado:");
 
         lblEstado.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lblEstado.setText("muestra");
 
         javax.swing.GroupLayout pnlEncabezadoLayout = new javax.swing.GroupLayout(pnlEncabezado);
         pnlEncabezado.setLayout(pnlEncabezadoLayout);
@@ -132,6 +143,7 @@ public class FrmContrato extends javax.swing.JFrame {
         });
 
         btnValidarCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnValidarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/garrapata (1).png"))); // NOI18N
         btnValidarCliente.setText("Validar");
 
         lblNombreCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -148,22 +160,24 @@ public class FrmContrato extends javax.swing.JFrame {
                 .addComponent(lblidentificacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtIdentificacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnValidarCliente)
-                .addGap(41, 41, 41)
-                .addComponent(lblNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58))
         );
         pnlClienteLayout.setVerticalGroup(
             pnlClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlClienteLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(pnlClienteLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnlClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlClienteLayout.createSequentialGroup()
+                        .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(pnlClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblidentificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtIdentificacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnValidarCliente))))
+                        .addComponent(btnValidarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtIdentificacionCliente)
+                        .addComponent(lblidentificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pnlEspacio.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Espacio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 15))); // NOI18N
@@ -177,7 +191,10 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbTipoEspacio.setToolTipText("Selecciones el tipo de espacio a alquilar");
 
         btnBuscarDisponible.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnBuscarDisponible.setText("Buscar disponibles");
+        btnBuscarDisponible.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/buscar.png"))); // NOI18N
+        btnBuscarDisponible.setText("Buscar espacio");
+        btnBuscarDisponible.setToolTipText("Buscara espacios disponibles");
+        btnBuscarDisponible.addActionListener(this::btnBuscarDisponibleActionPerformed);
 
         lblEspacioAsignado.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblEspacioAsignado.setText("Espacio asignado: ");
@@ -195,7 +212,7 @@ public class FrmContrato extends javax.swing.JFrame {
                         .addComponent(cmbTipoEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnBuscarDisponible)
                     .addComponent(lblEspacioAsignado, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         pnlEspacioLayout.setVerticalGroup(
             pnlEspacioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,11 +221,11 @@ public class FrmContrato extends javax.swing.JFrame {
                 .addGroup(pnlEspacioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbTipoEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBuscarDisponible)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblEspacioAsignado, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(lblEspacioAsignado)
+                .addContainerGap())
         );
 
         pnlFechas.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Fechas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 15))); // NOI18N
@@ -222,7 +239,7 @@ public class FrmContrato extends javax.swing.JFrame {
         dateFechaFinal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         lblDiasPeriodos.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
-        lblDiasPeriodos.setText("Días: ");
+        lblDiasPeriodos.setText("Días: - / Periodos: -");
 
         lbltext.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbltext.setText("Inicio");
@@ -236,34 +253,38 @@ public class FrmContrato extends javax.swing.JFrame {
             pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFechasLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(lblDiasPeriodos, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnlFechasLayout.createSequentialGroup()
+                .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlFechasLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbltext, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlFechasLayout.createSequentialGroup()
-                        .addComponent(lblDiasPeriodos, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addComponent(dateFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))
                     .addGroup(pnlFechasLayout.createSequentialGroup()
-                        .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbltext, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                        .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dateFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbltext1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15))))
+                        .addGap(46, 46, 46)
+                        .addComponent(lbltext1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         pnlFechasLayout.setVerticalGroup(
             pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFechasLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbltext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbltext1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dateFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblDiasPeriodos, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dateFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblDiasPeriodos)
+                .addContainerGap())
         );
 
         pnlServicios.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Servicios adicionales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 15))); // NOI18N
@@ -272,7 +293,8 @@ public class FrmContrato extends javax.swing.JFrame {
         cmbServicios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnAgregarServicio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnAgregarServicio.setText("+ Agregar");
+        btnAgregarServicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/signo-positivo.png"))); // NOI18N
+        btnAgregarServicio.setText(" Agregar");
 
         jScrollPane1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -319,7 +341,7 @@ public class FrmContrato extends javax.swing.JFrame {
                     .addGroup(pnlServiciosLayout.createSequentialGroup()
                         .addComponent(cmbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnAgregarServicio)
+                        .addComponent(btnAgregarServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -327,9 +349,9 @@ public class FrmContrato extends javax.swing.JFrame {
             pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlServiciosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarServicio))
+                .addGroup(pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnAgregarServicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbServicios))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                 .addContainerGap())
@@ -356,7 +378,7 @@ public class FrmContrato extends javax.swing.JFrame {
             .addGroup(jplSubtotalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jplSubtotalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTituloSubTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                    .addComponent(lblTituloSubTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblSubTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -387,7 +409,7 @@ public class FrmContrato extends javax.swing.JFrame {
             .addGroup(jplImpuestoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jplImpuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTituloImpuesto, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                    .addComponent(lblTituloImpuesto, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                     .addComponent(lblImpuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -418,7 +440,7 @@ public class FrmContrato extends javax.swing.JFrame {
             .addGroup(pnlTotalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlTotalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTituloTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTituloTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                     .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -436,11 +458,11 @@ public class FrmContrato extends javax.swing.JFrame {
             pnlCostosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCostosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jplSubtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jplSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jplImpuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         pnlCostosLayout.setVerticalGroup(
@@ -455,43 +477,50 @@ public class FrmContrato extends javax.swing.JFrame {
         );
 
         btnCrear.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/crear.png"))); // NOI18N
         btnCrear.setText("Crear");
 
         btnActivar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnActivar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/boton-de-play.png"))); // NOI18N
         btnActivar.setText("Activar");
         btnActivar.setEnabled(false);
 
         btnFinalizar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnFinalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/bandera.png"))); // NOI18N
         btnFinalizar.setText("Finalizar");
         btnFinalizar.setEnabled(false);
 
         btnCancelarContrato.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnCancelarContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/senal-de-stop.png"))); // NOI18N
         btnCancelarContrato.setText("Cancelar");
         btnCancelarContrato.setEnabled(false);
 
         btnBuscarContrato.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnBuscarContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/buscar.png"))); // NOI18N
         btnBuscarContrato.setText("Buscar contratos");
         btnBuscarContrato.addActionListener(this::btnBuscarContratoActionPerformed);
 
         btnLimpiar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/refresco.png"))); // NOI18N
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         javax.swing.GroupLayout pnlBotonesLayout = new javax.swing.GroupLayout(pnlBotones);
         pnlBotones.setLayout(pnlBotonesLayout);
         pnlBotonesLayout.setHorizontalGroup(
             pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBotonesLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(btnCrear)
+                .addContainerGap()
+                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnActivar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnFinalizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCancelarContrato)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBuscarContrato, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnBuscarContrato)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLimpiar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -531,16 +560,15 @@ public class FrmContrato extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnlFechas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlEspacio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(1, 1, 1)
                 .addComponent(pnlServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlCostos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addComponent(pnlBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -552,7 +580,6 @@ public class FrmContrato extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarContratoActionPerformed
 
     private void txtIdentificacionClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdentificacionClienteKeyTyped
-        // TODO add your handling code here
         char tecla = evt.getKeyChar();
         boolean esNumero = (tecla >= '0' && tecla <= '9');
 
@@ -564,6 +591,31 @@ public class FrmContrato extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtIdentificacionClienteKeyTyped
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        txtIdentificacionCliente.setText("");
+        lblNombreCliente.setText("");
+        cmbTipoEspacio.setSelectedIndex(0);
+        lblEspacioAsignado.setText("Espacio asignado: ");
+        dateFechaInicio.setDate(null);
+        dateFechaFinal.setDate(null);
+        lblDiasPeriodos.setText("Días: - / Periodos: -");
+        lblSubTotal.setText("₡0");
+        lblImpuesto.setText("₡0");
+        lblTotal.setText("₡0");
+        lblEstado.setText("Sin contrato");
+        lblNumeroContrato.setText("-");
+        //todo; limpiar tblServiciosContratos cuando este conectado el modelo defaulttablemodel
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnBuscarDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDisponibleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
+    private void cargarComboServicios(){
+        cmbServicios.removeAllItems();
+        for (Servicio servi : catalogoServicios.getList()) {
+            cmbServicios.addItem(servi);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -599,7 +651,7 @@ public class FrmContrato extends javax.swing.JFrame {
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnValidarCliente;
-    private javax.swing.JComboBox<String> cmbServicios;
+    private javax.swing.JComboBox<Object> cmbServicios;
     private javax.swing.JComboBox<String> cmbTipoEspacio;
     private com.toedter.calendar.JDateChooser dateFechaFinal;
     private com.toedter.calendar.JDateChooser dateFechaInicio;
