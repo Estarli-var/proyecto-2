@@ -22,7 +22,7 @@ public class FrmServicios extends javax.swing.JFrame {
      */
     public FrmServicios() {
         initComponents();
-        this.controladorS=new controladorServicios();    
+        this.controladorS=controladorServicios.getInstance();    
     }
     public void limpiar() {
     txtCodigo.setText("");

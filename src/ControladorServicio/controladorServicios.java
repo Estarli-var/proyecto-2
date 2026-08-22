@@ -14,9 +14,19 @@ import modelos.ServiciosList;
  * @author estar
  */
 public class controladorServicios {
+    
     private ServiciosList serviciosList;
+    private static controladorServicios instancia;
+    
     public controladorServicios() {
         this.serviciosList = new ServiciosList();
+    }
+    
+    public static controladorServicios getInstance() {
+        if (instancia == null) {
+            instancia = new controladorServicios();
+        }
+        return instancia;
     }
     public controladorServicios(ServiciosList serviciosList) {
         this.serviciosList = serviciosList;
