@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package contratos;
+package modelos;
 
+import modelos.Contrato;
 import estructuras.KeyDynamicsLists;
 import java.util.HashMap;
 import java.util.Iterator;
