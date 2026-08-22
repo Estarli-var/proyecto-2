@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package VistasContratos;
-
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import modelos.Servicio;
+import modelos.ServiciosList;
 /**
  *
  * @author Aaron Diaz
@@ -11,13 +14,21 @@ package VistasContratos;
 public class FrmContrato extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContrato.class.getName());
-
+    private DefaultTableModel modeloTabla;
+    private ServiciosList catalogoServicios;
+    private ArrayList<Servicio> servicioSeleccionados;
     /**
      * Creates new form FrmContratos
      */
     public FrmContrato() {
         initComponents();
         setLocationRelativeTo(null);
+        modeloTabla = (DefaultTableModel) tblServiciosContrato.getModel();
+        modeloTabla.setRowCount(0);
+        
+        servicioSeleccionados = new ArrayList<>();
+        catalogoServicios = new ServiciosList();
+        cargarComboServicios();
     }
 
     /**
@@ -599,7 +610,12 @@ public class FrmContrato extends javax.swing.JFrame {
     private void btnBuscarDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDisponibleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
-
+    private void cargarComboServicios(){
+        cmbServicios.removeAllItems();
+        for (Servicio servi : catalogoServicios.getList()) {
+            cmbServicios.addItem(servi);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -635,7 +651,7 @@ public class FrmContrato extends javax.swing.JFrame {
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnValidarCliente;
-    private javax.swing.JComboBox<String> cmbServicios;
+    private javax.swing.JComboBox<Object> cmbServicios;
     private javax.swing.JComboBox<String> cmbTipoEspacio;
     private com.toedter.calendar.JDateChooser dateFechaFinal;
     private com.toedter.calendar.JDateChooser dateFechaInicio;
