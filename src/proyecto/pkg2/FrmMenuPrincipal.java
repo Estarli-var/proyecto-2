@@ -4,6 +4,7 @@
  */
 package proyecto.pkg2;
 
+import JFrameServicios.FrmServicios;
 import VistasContratos.FrmContrato;
 
 /**
@@ -463,6 +464,7 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
     private void pnlServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlServiciosMouseClicked
         resaltarFila(pnlServicios, pnlFranjaServicios,  lblFlechaServicios);
+        new FrmServicios().setVisible(true);
     }//GEN-LAST:event_pnlServiciosMouseClicked
 
     private void pnlEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlEmpleadosMouseClicked
