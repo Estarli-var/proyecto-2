@@ -6,7 +6,7 @@ package modelos;
 
 import excepciones.fechaInvalidaException;
 import excepciones.cambioEstadoInvalidoException;
-import enumContratos.EstadoContrato;
+import Enums.EstadoContrato;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;

@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package VistasContratos;
+package JFramesStorageBox;
+import JFramesStorageBox.FrmBuscarContrato;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import modelos.Servicio;
-import modelos.ServiciosList;
+import lists.ServiciosList;
 /**
  *
  * @author Aaron Diaz

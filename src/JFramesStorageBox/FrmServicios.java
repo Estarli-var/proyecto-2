@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package JFrameServicios;
+package JFramesStorageBox;
 
-import ControladorServicio.controladorServicios;
+import JFramesStorageBox.FrmBuscarServicio;
+import Controladores.controladorServicios;
 import excepciones.SException;
 import javax.swing.JOptionPane;
 import modelos.Servicio;
