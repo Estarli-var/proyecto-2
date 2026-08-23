@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package espacios;
+package Controladores;
 
+import modelos.Espacio;
+import Enums.TipoHabitacion;
 import estructuras.KeyDynamicsLists;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +29,7 @@ public class ControladorEspacio {
     public void agregarEspacio(int numero, TipoHabitacion tipo, double tamano, double precio) throws Exception {
         Espacio buscado = buscarNumero(numero);
         if (buscado != null) {
-            throw new Exception("El número de espacio ocupado.");
+            throw new Exception("El número de espacio se encuentra ocupado.");
         }
         
         Espacio nuevo = new Espacio(numero, tipo, tamano, precio);
@@ -64,7 +66,6 @@ public class ControladorEspacio {
 
     public ArrayList<Espacio> filtrarPorTipo(TipoHabitacion tipo) {
         ArrayList<Espacio> resultado = new ArrayList<>();
-        
         Iterator<Espacio> it = listaEspacio.getAll();
         
         while (it.hasNext()) {

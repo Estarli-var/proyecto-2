@@ -2,21 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ControladorServicio;
+package Controladores;
 
 import excepciones.SException;
 import java.util.ArrayList;
 import modelos.Servicio;
-import modelos.ServiciosList;
+import lists.ServiciosList;
 
 /**
  *
  * @author estar
  */
 public class controladorServicios {
+    
     private ServiciosList serviciosList;
+    private static controladorServicios instancia;
+    
     public controladorServicios() {
         this.serviciosList = new ServiciosList();
+    }
+    
+    public static controladorServicios getInstance() {
+        if (instancia == null) {
+            instancia = new controladorServicios();
+        }
+        return instancia;
     }
     public controladorServicios(ServiciosList serviciosList) {
         this.serviciosList = serviciosList;

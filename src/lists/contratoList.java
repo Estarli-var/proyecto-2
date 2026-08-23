@@ -3,11 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package contratos;
+package lists;
 
 import estructuras.KeyDynamicsLists;
 import java.util.HashMap;
 import java.util.Iterator;
+import modelos.Contrato;
 
 /**
  *
@@ -19,10 +20,12 @@ public class contratoList implements KeyDynamicsLists<Contrato, Integer>{
     public contratoList() {
         this.contratos = new HashMap<>();
     }
+      @Override
     public Contrato get(Integer numero){
         return contratos.get(numero);
     }
     
+      @Override
     public boolean remove(Integer numero){
         Contrato contra = this.get(numero);
         if (contra == null) {
@@ -31,6 +34,7 @@ public class contratoList implements KeyDynamicsLists<Contrato, Integer>{
         return contratos.remove(numero) != null;
     }
     
+      @Override
     public boolean add(Contrato item){
         if (contratos.containsKey(item.getNumeroContrato())) {
             return false;

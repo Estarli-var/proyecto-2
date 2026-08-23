@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package controladorContratos;
+package excepciones;
 
 /**
  *
  * @author Aaron Diaz
  */
-public class controladorContrato {
-
+public class cambioEstadoInvalidoException extends Exception {
+    public cambioEstadoInvalidoException(String mensaje){
+        super(mensaje);
+    }
 }

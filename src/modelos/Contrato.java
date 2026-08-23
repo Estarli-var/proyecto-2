@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package contratos;
+package modelos;
 
-import enumContratos.EstadoContrato;
+import excepciones.fechaInvalidaException;
+import excepciones.cambioEstadoInvalidoException;
+import Enums.EstadoContrato;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;

@@ -4,8 +4,8 @@
  */
 package proyecto.pkg2;
 
-import JFrameServicios.FrmServicios;
-import VistasContratos.FrmContrato;
+import JFramesStorageBox.FrmServicios;
+import JFramesStorageBox.FrmContrato;
 
 /**
  *
