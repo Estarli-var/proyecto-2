@@ -20,12 +20,13 @@ public class Cliente {
     private String correo;
     
 
-    public Cliente(String identificacion, String nombre, LocalDate fechaNacimiento) {
+    public Cliente(String identificacion, String nombre, LocalDate fechaNacimiento,
+            int numero, String correo) {
         this.identificacion = identificacion;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
-        this.numero = 0;
-        this.correo = "";
+        this.numero = numero;
+        this.correo = correo;
     }
 
     public String getIdentificacion() {
