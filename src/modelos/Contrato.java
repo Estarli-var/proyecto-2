@@ -19,7 +19,7 @@ import modelos.Servicio;
  * @author Aaron Diaz
  */
 public class Contrato {
-    private int contador = 1;
+    private static int contador = 1;
     private double impuest = 0.13;
     private int NumeroContrato;
     private Date FechaInicio;
@@ -36,8 +36,8 @@ public class Contrato {
     public Contrato(Date fechaInicio, Date fechaFin) throws fechaInvalidaException {
     validarFechas(FechaInicio, FechaFinal);
     this.NumeroContrato = contador;
-    this.FechaInicio = FechaInicio;
-    this.FechaFinal = FechaFinal;
+    this.FechaInicio = fechaInicio;
+    this.FechaFinal = fechaFin;
     this.Estado = EstadoContrato.PENDIENTE;
     this.servicios = new ArrayList<>();
     this.SubTotal = 0;
