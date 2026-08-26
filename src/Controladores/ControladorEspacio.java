@@ -7,6 +7,7 @@ package Controladores;
 import modelos.Espacio;
 import Enums.TipoHabitacion;
 import estructuras.KeyDynamicsLists;
+import lists.EspaciosList;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -75,6 +76,26 @@ public class ControladorEspacio {
             }
         }
         
+        return resultado;
+    }
+
+    public ArrayList<Espacio> buscarPorTexto(String texto) {
+        if (listaEspacio instanceof EspaciosList) {
+            return ((EspaciosList) listaEspacio).buscarPorTexto(texto);
+        }
+        
+        ArrayList<Espacio> resultado = new ArrayList<>();
+        Iterator<Espacio> it = listaEspacio.getAll();
+        String filtro = (texto == null) ? "" : texto.toLowerCase().trim();
+        
+        while (it.hasNext()) {
+            Espacio e = it.next();
+            if (filtro.isEmpty() || 
+                String.valueOf(e.getNumero()).contains(filtro) || 
+                (e.getTipo() != null && e.getTipo().name().toLowerCase().contains(filtro))) {
+                resultado.add(e);
+            }
+        }
         return resultado;
     }
 }
