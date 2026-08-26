@@ -7,7 +7,7 @@ import JFramesStorageBox.FrmBuscarContrato;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import modelos.Servicio;
-import lists.ServiciosList;
+import Controladores.controladorServicios;
 /**
  *
  * @author Aaron Diaz
@@ -16,7 +16,6 @@ public class FrmContrato extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContrato.class.getName());
     private DefaultTableModel modeloTabla;
-    private ServiciosList catalogoServicios;
     private ArrayList<Servicio> servicioSeleccionados;
     /**
      * Creates new form FrmContratos
@@ -28,7 +27,6 @@ public class FrmContrato extends javax.swing.JFrame {
         modeloTabla.setRowCount(0);
         
         servicioSeleccionados = new ArrayList<>();
-        catalogoServicios = new ServiciosList();
         cargarComboServicios();
     }
 
@@ -613,7 +611,7 @@ public class FrmContrato extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
     private void cargarComboServicios(){
         cmbServicios.removeAllItems();
-        for (Servicio servi : catalogoServicios.getList()) {
+        for (Servicio servi : controladorServicios.getInstance().obtenerTodos()) {
             cmbServicios.addItem(servi);
         }
     }
