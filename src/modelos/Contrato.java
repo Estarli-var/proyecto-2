@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelos;
-
 import excepciones.fechaInvalidaException;
 import excepciones.cambioEstadoInvalidoException;
 import Enums.EstadoContrato;
@@ -12,8 +11,8 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import modelos.Cliente;
 import modelos.Servicio;
-
 /**
  *
  * @author Aaron Diaz
@@ -26,7 +25,8 @@ public class Contrato {
     private Date FechaFinal;
     private EstadoContrato Estado;
     
-    
+    private Cliente cliente;
+    private Espacio espacio;
     private ArrayList<Servicio> servicios;
     
     private double SubTotal;
@@ -34,8 +34,8 @@ public class Contrato {
     private double Total;
     
     public Contrato(Date fechaInicio, Date fechaFin) throws fechaInvalidaException {
-    validarFechas(FechaInicio, FechaFinal);
-    this.NumeroContrato = contador;
+    validarFechas(fechaInicio, fechaFin);
+    this.NumeroContrato = contador++;
     this.FechaInicio = fechaInicio;
     this.FechaFinal = fechaFin;
     this.Estado = EstadoContrato.PENDIENTE;
@@ -53,6 +53,22 @@ public class Contrato {
         }
     }
     
+    public void asignarCliente(Cliente cliente){
+        this.cliente = cliente;
+    }
+    
+    public Cliente getCliente(){
+        return cliente;
+    }
+    
+    public void asignarEspacio(Espacio espacio){
+        this.espacio = espacio;
+    }
+    
+    public Espacio getEspacio(){
+        return espacio;
+    }
+    
     public int calcularDias(){
     LocalDate Inicio = FechaInicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     LocalDate Fin = FechaFinal.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -66,12 +82,15 @@ public class Contrato {
     
     public void calcularCostos(){
     double precioServicios = 0;
+    double precioEspacio = 0;
         for (Servicio serv : servicios) {
             precioServicios += serv.getPrecio();
         }
-        //falta espacio va debajo de este comentario
+        if (espacio != null) {
+            precioEspacio = espacio.getPrecio() * calcularPeriodos();
+        }
         
-        double totalConImpuesto = precioServicios;
+        double totalConImpuesto = precioServicios + precioEspacio;
         this.SubTotal = totalConImpuesto / (1 + impuest);
         this.Impuesto = totalConImpuesto - this.SubTotal;
         this.Total = totalConImpuesto;
@@ -95,14 +114,20 @@ public class Contrato {
             + Estado);
         }
         this.Estado = EstadoContrato.ACTIVO;
+        if (espacio != null) {
+            espacio.setOcupado(true);
+        }
     }
-    
+        
     public void finalizar() throws cambioEstadoInvalidoException{
         if (Estado != EstadoContrato.ACTIVO) {
             throw new cambioEstadoInvalidoException("Solo un contrato Activo puede finalizarse. Estado actual: "
             + Estado);
         }
         this.Estado = EstadoContrato.FINALIZADO;
+        if (espacio != null) {
+            espacio.setOcupado(false);
+        }
     }
     
     public void cancelar() throws cambioEstadoInvalidoException{
@@ -111,6 +136,9 @@ public class Contrato {
             + Estado);
         }
         this.Estado = EstadoContrato.CANCELADO;
+          if (espacio != null) {
+            espacio.setOcupado(false);
+        }
     }
     
     public int getNumeroContrato() {

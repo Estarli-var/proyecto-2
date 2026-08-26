@@ -33,15 +33,15 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         pnlFiltros = new javax.swing.JPanel();
         lblFiltroNumero = new javax.swing.JLabel();
         txtFiltroNumero = new javax.swing.JTextField();
-        lblFiltroCliente = new javax.swing.JLabel();
-        txtFiltroIdentificacion = new javax.swing.JTextField();
         lblFiltroEspacio = new javax.swing.JLabel();
         cmbFiltroEspacio = new javax.swing.JComboBox<>();
-        lblFiltroFecha = new javax.swing.JLabel();
+        lblFiltroCliente = new javax.swing.JLabel();
         lblFiltroEstado = new javax.swing.JLabel();
         cmbFiltroEstado = new javax.swing.JComboBox<>();
         btnFiltrar = new javax.swing.JButton();
         txtFiltroCliente = new javax.swing.JTextField();
+        lblFiltroFecha = new javax.swing.JLabel();
+        dtcFecha = new com.toedter.calendar.JDateChooser();
         pnlResultado = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblContratos = new javax.swing.JTable();
@@ -61,83 +61,85 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
 
         txtFiltroNumero.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
-        lblFiltroCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblFiltroCliente.setText("   Identificación:");
-
-        txtFiltroIdentificacion.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        txtFiltroIdentificacion.setToolTipText("");
-
         lblFiltroEspacio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblFiltroEspacio.setText("  Espacio:");
 
-        cmbFiltroEspacio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        cmbFiltroEspacio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cmbFiltroEspacio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pequeño", "Mediano", "Grande" }));
 
-        lblFiltroFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblFiltroFecha.setText("  Cliente: ");
+        lblFiltroCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblFiltroCliente.setText("  Cliente: ");
 
         lblFiltroEstado.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblFiltroEstado.setText("  Estado:");
 
-        cmbFiltroEstado.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        cmbFiltroEstado.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cmbFiltroEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Pendiente", "Activo", "Finalizado", "Cancelado" }));
 
         btnFiltrar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnFiltrar.setText("Filtrar");
 
-        txtFiltroCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        txtFiltroCliente.setToolTipText("");
+        txtFiltroCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtFiltroCliente.setToolTipText("Ingrese el Nombre o Identificacion");
+
+        lblFiltroFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblFiltroFecha.setText("Fecha: ");
+
+        dtcFecha.setDateFormatString("dd/MM/yyyy");
+        dtcFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout pnlFiltrosLayout = new javax.swing.GroupLayout(pnlFiltros);
         pnlFiltros.setLayout(pnlFiltrosLayout);
         pnlFiltrosLayout.setHorizontalGroup(
             pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFiltrosLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
+                .addContainerGap()
                 .addComponent(lblFiltroNumero)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtFiltroNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblFiltroCliente)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFiltroIdentificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblFiltroFecha)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtFiltroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblFiltroEspacio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblFiltroFecha)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(dtcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblFiltroEspacio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmbFiltroEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblFiltroEstado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbFiltroEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(cmbFiltroEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(btnFiltrar)
-                .addGap(95, 95, 95))
+                .addGap(88, 88, 88))
         );
         pnlFiltrosLayout.setVerticalGroup(
             pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlFiltrosLayout.createSequentialGroup()
                 .addGroup(pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlFiltrosLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblFiltroNumero))
-                    .addGroup(pnlFiltrosLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
+                        .addGap(7, 7, 7)
                         .addGroup(pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtFiltroNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFiltroCliente)
-                            .addComponent(txtFiltroIdentificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFiltroFecha)
-                            .addComponent(txtFiltroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblFiltroEspacio)
                             .addComponent(cmbFiltroEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblFiltroEstado)
-                            .addComponent(cmbFiltroEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnFiltrar))))
-                .addContainerGap(7, Short.MAX_VALUE))
+                            .addComponent(btnFiltrar)
+                            .addComponent(cmbFiltroEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlFiltrosLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dtcFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblFiltroNumero)
+                                .addComponent(txtFiltroNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblFiltroCliente)
+                                .addComponent(txtFiltroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblFiltroFecha)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tblContratos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -213,7 +215,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 1196, Short.MAX_VALUE)
             .addComponent(pnlResultado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(798, 798, 798)
@@ -223,6 +225,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(1, 1, 1)
                 .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlResultado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -281,6 +284,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
     private javax.swing.JButton btnFiltrar;
     private javax.swing.JComboBox<String> cmbFiltroEspacio;
     private javax.swing.JComboBox<String> cmbFiltroEstado;
+    private com.toedter.calendar.JDateChooser dtcFecha;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblFiltroCliente;
     private javax.swing.JLabel lblFiltroEspacio;
@@ -292,7 +296,6 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
     private javax.swing.JPanel pnlResultado;
     private javax.swing.JTable tblContratos;
     private javax.swing.JTextField txtFiltroCliente;
-    private javax.swing.JTextField txtFiltroIdentificacion;
     private javax.swing.JTextField txtFiltroNumero;
     // End of variables declaration//GEN-END:variables
 }
