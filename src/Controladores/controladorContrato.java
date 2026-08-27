@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import lists.contratoList;
+import modelos.Cliente;
 import modelos.Contrato;
 import modelos.Espacio;
 import modelos.Servicio;
@@ -23,6 +24,7 @@ public class controladorContrato {
     private contratoList contratoList;
     private static controladorContrato instancia;
     private ControladorEspacio controladorEspacio;
+    private ControladorCliente controladorCliente;
     
     private controladorContrato(){
         this.contratoList = new contratoList();
@@ -35,9 +37,12 @@ public class controladorContrato {
         return instancia;
     }
     
-    // llamar a este método una vez que exista EspaciosList
     public void setControladorEspacio(ControladorEspacio controladorEspacio) {
         this.controladorEspacio = controladorEspacio;
+    }
+    
+    public void setControladorCliente(ControladorCliente controladorCliente) {
+        this.controladorCliente = controladorCliente;
     }
     
     public Contrato crearContrato(Date fechaInicio, Date fechaFin) throws fechaInvalidaException{
@@ -46,8 +51,8 @@ public class controladorContrato {
         return nuevo;
     }
     
-    public void validarCliente(String identificacion){
-        return ;
+    public Cliente validarCliente(String identificacion){
+        return controladorCliente.buscarCliente(identificacion);
     }
     
     public ArrayList<Espacio> buscarEspacioDisponible(TipoHabitacion tipo, Date fechaInicio, Date fechaFin){
@@ -88,6 +93,10 @@ public class controladorContrato {
     
     public boolean quitarServicio(Contrato contrato, Servicio servicio){
         return contrato.quitarServicio(servicio);
+    }
+    
+    public void asignarCliente(Contrato contrato, Cliente cliente){
+        contrato.asignarCliente(cliente);
     }
     
     public int obtenerDias(Contrato contrato){
@@ -165,12 +174,11 @@ public class controladorContrato {
          ArrayList<Contrato> resultado = new ArrayList<>();
          
          for (Contrato contra : listarTodos()) {
-             if (contra.getCliente() == null && (contra.getCliente().getNombre().toLowerCase().contains(texto.toLowerCase())
+             if (contra.getCliente() != null && (contra.getCliente().getNombre().toLowerCase().contains(texto.toLowerCase())
                     || contra.getCliente().getIdentificacion().contains(texto))) {
                  resultado.add(contra);
              }
         }
          return resultado;
-    }
-    
+    } 
 }
