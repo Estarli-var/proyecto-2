@@ -494,7 +494,6 @@ public FrmMenuPrincipal() {
     }//GEN-LAST:event_pnlServiciosMouseClicked
 
     private void pnlEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlEmpleadosMouseClicked
-
         resaltarFila(pnlEmpleados, pnlFranjaEmpleados, lblFlechaEmpleados);
         new JFramesStorageBox.FrmEmpleado(controladorEmp).setVisible(true);
     }//GEN-LAST:event_pnlEmpleadosMouseClicked

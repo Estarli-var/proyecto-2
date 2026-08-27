@@ -759,8 +759,7 @@ public class FrmContrato extends javax.swing.JFrame implements IView<Contrato>  
             return;
         }
         espacioAsignado = disponibles.get(0);
-        lblEspacioAsignado.setText("Espacio asignado: #" + espacioAsignado.getNumero()
-            + " (" + disponibles.size() + " disponibles)");
+        lblEspacioAsignado.setText("Espacio asignado: " + espacioAsignado.getNumero());
         showMessage("Se encontraron " + disponibles.size() 
             +" espacios disponibles. Asignado: #" + espacioAsignado.getNumero());
     }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
