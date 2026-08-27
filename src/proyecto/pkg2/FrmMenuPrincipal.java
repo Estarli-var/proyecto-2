@@ -4,8 +4,11 @@
  */
 package proyecto.pkg2;
 
+import JFramesStorageBox.FrmCliente;
 import JFramesStorageBox.FrmServicios;
 import JFramesStorageBox.FrmContrato;
+import java.util.ArrayList;
+import modelos.Cliente;
 
 /**
  *
@@ -14,14 +17,22 @@ import JFramesStorageBox.FrmContrato;
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMenuPrincipal.class.getName());
+<<<<<<< Updated upstream
     private lists.EmpleadoList listaEmpleados = new lists.EmpleadoList();
     private Controladores.controladorEmpleado controladorEmp = new Controladores.controladorEmpleado(listaEmpleados);
+=======
+    public ArrayList<Cliente> listaClientes;
+    private FrmCliente frmcliente;
+
+>>>>>>> Stashed changes
     /**
      * Creates new form FrmMenuPrincipal
      */
     public FrmMenuPrincipal() {
         initComponents();
         setLocationRelativeTo(null);
+        this.listaClientes = new ArrayList<>();
+        this.frmcliente = new FrmCliente(this.listaClientes);
     }
 
     /**
@@ -452,6 +463,8 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
 
     private void pnlClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlClientesMouseClicked
         resaltarFila(pnlClientes, pnlFranjaClientes,  lblFlechaClientes);
+        this.frmcliente.setVisible(true);
+        
     }//GEN-LAST:event_pnlClientesMouseClicked
 
     private void pnlEspaciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlEspaciosMouseClicked
