@@ -4,6 +4,10 @@
  */
 package JFramesStorageBox;
 
+import Controladores.controladorEmpleado;
+
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author estar
@@ -11,12 +15,72 @@ package JFramesStorageBox;
 public class FrmEmpleado extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEmpleado.class.getName());
-
+    private controladorEmpleado controlador;
     /**
      * Creates new form FrmEmpleado
      */
     public FrmEmpleado() {
         initComponents();
+    }
+    public FrmEmpleado(controladorEmpleado controlador) {
+        this.controlador = controlador;
+        initComponents();
+        cargarPuestos();
+    }
+    
+    public void setControlador(controladorEmpleado controlador) {
+        this.controlador = controlador;
+        cargarPuestos();
+    }
+    
+private void cargarPuestos() {
+    if (this.controlador != null) {
+        // Remover listeners temporales para evitar disparos en cadena al llenar
+        cmbPuesto.removeAllItems();
+        
+        String[] puestos = this.controlador.obtenerNomDisp();
+        for (String puesto : puestos) {
+            cmbPuesto.addItem(puesto);
+        }
+
+        // Asignar el listener de actualización de salario una sola vez
+        cmbPuesto.addActionListener(e -> actualizarSalarioVista());
+
+        if (cmbPuesto.getItemCount() > 0) {
+            cmbPuesto.setSelectedIndex(0);
+            actualizarSalarioVista();
+        }
+    }
+}
+    
+    
+    private void actualizarSalarioVista() {
+        if (controlador != null) {
+            int indice = cmbPuesto.getSelectedIndex();
+            txtSalario.setText(controlador.obtenerSalario(indice));
+        }
+    }
+    
+    public void cargarEmpleadoSeleccionado(Object[] datosEmpleado) {
+        if (datosEmpleado != null) {
+            txtcedula.setText(datosEmpleado[0].toString());
+            txtNombre.setText(datosEmpleado[1].toString());
+            txtTelefono.setText(datosEmpleado[2].toString());
+            cmbPuesto.setSelectedIndex((Integer) datosEmpleado[3]);
+            actualizarSalarioVista();
+            txtcedula.setEditable(false);
+    }
+}
+    
+    private void limpiarCampos() {
+        txtcedula.setText("");
+        txtNombre.setText("");
+        txtTelefono.setText("");
+        if (cmbPuesto.getItemCount() > 0) {
+            cmbPuesto.setSelectedIndex(0);
+        }
+        txtcedula.setEditable(true);
+        txtcedula.requestFocus();
     }
 
     /**
@@ -117,14 +181,19 @@ public class FrmEmpleado extends javax.swing.JFrame {
         pnlBotones.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Acciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial Black", 0, 12))); // NOI18N
 
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(this::btnAgregarActionPerformed);
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(this::btnActualizarActionPerformed);
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         javax.swing.GroupLayout pnlBotonesLayout = new javax.swing.GroupLayout(pnlBotones);
         pnlBotones.setLayout(pnlBotonesLayout);
@@ -162,6 +231,75 @@ public class FrmEmpleado extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+    if (controlador == null) return;
+        try {
+            String cedula = txtcedula.getText();
+            String nombre = txtNombre.getText();
+            String telefono = txtTelefono.getText();
+            int indicePuesto = cmbPuesto.getSelectedIndex();
+
+            controlador.agregarEmpleado(cedula, nombre, telefono, indicePuesto);
+            JOptionPane.showMessageDialog(this, "Empleado agregado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+
+       if (controlador == null) return;
+        try {
+            String cedula = txtcedula.getText();
+            String nombre = txtNombre.getText();
+            String telefono = txtTelefono.getText();
+            int indicePuesto = cmbPuesto.getSelectedIndex();
+
+            controlador.actualizarEmpleado(cedula, nombre, telefono, indicePuesto);
+            JOptionPane.showMessageDialog(this, "Empleado actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            limpiarCampos();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+        if (controlador == null) return;
+        FrmBuscarEmpleado frmBuscar = new FrmBuscarEmpleado(this, controlador);
+        frmBuscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        limpiarCampos();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+      if (controlador == null) return;
+        String cedula = txtcedula.getText().trim();
+        if (cedula.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione o ingrese una cédula para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int opc = JOptionPane.showConfirmDialog(this, 
+                "¿Está seguro de eliminar al empleado con cédula " + cedula + "?", 
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (opc == JOptionPane.YES_OPTION) {
+            try {
+                controlador.eliminarEmpleado(cedula);
+                JOptionPane.showMessageDialog(this, "Empleado eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                limpiarCampos();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -182,7 +320,23 @@ public class FrmEmpleado extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+        }
+    } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+        logger.log(java.util.logging.Level.SEVERE, null, ex);
+    }
 
+    /* Instancia la cadena de dependencias para ejecutar la vista sola */
+    java.awt.EventQueue.invokeLater(() -> {
+        lists.EmpleadoList lista = new lists.EmpleadoList();
+        Controladores.controladorEmpleado ctrl = new Controladores.controladorEmpleado(lista);
+        new FrmEmpleado(ctrl).setVisible(true);
+    });
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new FrmEmpleado().setVisible(true));
     }
