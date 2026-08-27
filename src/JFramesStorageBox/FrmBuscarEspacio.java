@@ -4,6 +4,9 @@
  */
 package JFramesStorageBox;
 
+import Controladores.ControladorEspacio;
+
+
 /**
  *
  * @author emalv
@@ -11,13 +14,40 @@ package JFramesStorageBox;
 public class FrmBuscarEspacio extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmBuscarEspacio.class.getName());
-
+    private FrmEspacio frmespacio;
+    private ControladorEspacio controladorr;
     /**
      * Creates new form FrmBuscar
      */
     public FrmBuscarEspacio() {
         initComponents();
     }
+
+    public FrmBuscarEspacio(FrmEspacio frmespacio, ControladorEspacio controladorE) {
+        initComponents();
+        this.frmespacio = frmespacio;
+        this.controladorr = controladorE;
+        cargarTabla("");
+    }
+    
+    private void cargarTabla(String filtro) {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblEspacios.getModel();
+    modelo.setRowCount(0);
+
+    if (controladorr == null) return;
+
+    java.util.ArrayList<modelos.Espacio> lista = controladorr.buscarPorTexto(filtro);
+    for (modelos.Espacio e : lista) {
+        modelo.addRow(new Object[]{
+            e.getNumero(),
+            e.getTipo(),
+            e.getTamano(),
+            e.getPrecio(),
+            e.isOcupado() ? "Ocupado" : "Disponible"
+        });
+    }
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,7 +65,6 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEspacios = new javax.swing.JTable();
-        btnSeleccionar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -43,9 +72,10 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Busqueda");
 
-        jLabel2.setText("Buscar (Código/Nombre):");
+        jLabel2.setText("Buscar por Código:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         tblEspacios.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tblEspacios.setModel(new javax.swing.table.DefaultTableModel(
@@ -68,9 +98,8 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblEspacios);
         tblEspacios.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        btnSeleccionar.setText("Seleccionar");
-
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -95,8 +124,6 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSeleccionar)
-                .addGap(18, 18, 18)
                 .addComponent(btnCancelar)
                 .addGap(23, 23, 23))
         );
@@ -113,9 +140,7 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSeleccionar)
-                    .addComponent(btnCancelar))
+                .addComponent(btnCancelar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -132,6 +157,16 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        cargarTabla(txtCodNom.getText().trim());
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -161,7 +196,6 @@ public class FrmBuscarEspacio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnSeleccionar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

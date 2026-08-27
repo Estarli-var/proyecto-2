@@ -23,18 +23,20 @@ public class ControladorEspacio {
         this.listaEspacio = listaEspacio;
     }
 
+    public ControladorEspacio() {
+        this.listaEspacio = new EspaciosList();
+    }
+
     public Espacio buscarNumero(int numero) {
         return listaEspacio.get(numero);
     }
 
-    public void agregarEspacio(int numero, TipoHabitacion tipo, double tamano, double precio) throws Exception {
-        Espacio buscado = buscarNumero(numero);
-        if (buscado != null) {
-            throw new Exception("El número de espacio se encuentra ocupado.");
-        }
-        
+    public void agregarEspacio(int numero, Enums.TipoHabitacion tipo, double tamano, double precio) throws Exception {
         Espacio nuevo = new Espacio(numero, tipo, tamano, precio);
-        listaEspacio.add(nuevo);
+        boolean exito = listaEspacio.add(nuevo);
+        if (!exito) {
+            throw new Exception("El espacio número " + numero + " ya se encuentra registrado.");
+        }
     }
 
     public void actualizarEspacio(int numero, TipoHabitacion tipo, double tamano, double precio) throws Exception {

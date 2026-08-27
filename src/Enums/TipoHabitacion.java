@@ -33,5 +33,10 @@ public enum TipoHabitacion {
     public double getPrecio(){
         return precio; 
     }
+    
+    @Override
+    public String toString() {
+    return nombre; 
+    }
 
 }
