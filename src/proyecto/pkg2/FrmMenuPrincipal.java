@@ -16,24 +16,25 @@ import modelos.Cliente;
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMenuPrincipal.class.getName());
-<<<<<<< Updated upstream
-    private lists.EmpleadoList listaEmpleados = new lists.EmpleadoList();
-    private Controladores.controladorEmpleado controladorEmp = new Controladores.controladorEmpleado(listaEmpleados);
-=======
-    public ArrayList<Cliente> listaClientes;
-    private FrmCliente frmcliente;
+private lists.EmpleadoList listaEmpleados = new lists.EmpleadoList();
 
->>>>>>> Stashed changes
+private Controladores.controladorEmpleado controladorEmp =
+        new Controladores.controladorEmpleado(listaEmpleados);
+
+private FrmCliente frmcliente;
+private Controladores.ControladorCliente ctrCliente;
+
     /**
      * Creates new form FrmMenuPrincipal
      */
-    public FrmMenuPrincipal() {
-        initComponents();
-        setLocationRelativeTo(null);
-        this.listaClientes = new ArrayList<>();
-        this.frmcliente = new FrmCliente(this.listaClientes);
-    }
+public FrmMenuPrincipal() {
+    initComponents();
+    setLocationRelativeTo(null);
+
+    ctrCliente = Controladores.ControladorCliente.getInstancia();
+
+    frmcliente = new FrmCliente();
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -525,27 +526,27 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+public static void main(String args[]) {
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmMenuPrincipal().setVisible(true));
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info :
+                javax.swing.UIManager.getInstalledLookAndFeels()) {
+
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+        }
+
+    } catch (Exception ex) {
+        System.out.println("No se pudo cargar Nimbus: " + ex.getMessage());
     }
+
+    java.awt.EventQueue.invokeLater(() -> {
+        new FrmMenuPrincipal().setVisible(true);
+    });
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
