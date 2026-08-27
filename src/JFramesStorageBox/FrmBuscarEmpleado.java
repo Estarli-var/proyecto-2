@@ -4,6 +4,10 @@
  */
 package JFramesStorageBox;
 
+import Controladores.controladorEmpleado;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author estar
@@ -11,12 +15,34 @@ package JFramesStorageBox;
 public class FrmBuscarEmpleado extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmBuscarEmpleado.class.getName());
-
+    private controladorEmpleado controlador;
+    private FrmEmpleado frmPadre;
     /**
      * Creates new form FrmBuscarEmpleado
      */
     public FrmBuscarEmpleado() {
         initComponents();
+    }
+    
+    public FrmBuscarEmpleado(FrmEmpleado frmPadre, controladorEmpleado controlador) {
+        this.frmPadre = frmPadre;
+        this.controlador = controlador;
+        initComponents();
+        if (this.controlador != null) {
+            // El controlador provee la matriz de datos de todos los empleados
+            actualizarTabla(this.controlador.obtenertodos());
+        }
+    }
+    
+    private void actualizarTabla(Object[][] datos) {
+        DefaultTableModel model = (DefaultTableModel) tblEmpleados.getModel();
+        model.setRowCount(0);
+
+        if (datos != null) {
+            for (Object[] fila : datos) {
+                model.addRow(fila);
+            }
+        }
     }
 
     /**
@@ -50,6 +76,7 @@ public class FrmBuscarEmpleado extends javax.swing.JFrame {
         txtBuscar.setColumns(20);
 
         BtnBuscar.setText("Buscar");
+        BtnBuscar.addActionListener(this::BtnBuscarActionPerformed);
 
         javax.swing.GroupLayout pnlBusquedaLayout = new javax.swing.GroupLayout(pnlBusqueda);
         pnlBusqueda.setLayout(pnlBusquedaLayout);
@@ -79,8 +106,10 @@ public class FrmBuscarEmpleado extends javax.swing.JFrame {
         getContentPane().add(pnlBusqueda, java.awt.BorderLayout.PAGE_START);
 
         btnSeleccionar.setText("Seleccionar");
+        btnSeleccionar.addActionListener(this::btnSeleccionarActionPerformed);
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         javax.swing.GroupLayout pnlAccionesLayout = new javax.swing.GroupLayout(pnlAcciones);
         pnlAcciones.setLayout(pnlAccionesLayout);
@@ -140,6 +169,37 @@ public class FrmBuscarEmpleado extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        // TODO add your handling code here:
+
+        int filaSeleccionada = tblEmpleados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un empleado de la tabla.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String cedula = tblEmpleados.getValueAt(filaSeleccionada, 0).toString();
+        Object[] datosEmpleado = controlador.buscarEmpleados(cedula);
+
+        if (datosEmpleado != null && frmPadre != null) {
+            frmPadre.cargarEmpleadoSeleccionado(datosEmpleado);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnSeleccionarActionPerformed
+
+    private void BtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarActionPerformed
+        // TODO add your handling code here:
+        if (controlador != null) {
+            String filtro = txtBuscar.getText();
+            actualizarTabla(controlador.buscarTexto(filtro));
+        }
+    }//GEN-LAST:event_BtnBuscarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments

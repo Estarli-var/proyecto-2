@@ -17,6 +17,9 @@ public class Empleado {
     private PuestoEmpleado puesto;
     private double salario;
     
+    public PuestoEmpleado getPuesto() {
+        return puesto;
+    }
     public void setPuesto(PuestoEmpleado puesto) {
         this.puesto = puesto;
         this.salario = puesto.getSalarioBase();
@@ -60,4 +63,5 @@ public class Empleado {
         this.telefono = telefono;
         setPuesto(puesto);
     }
+
 }
