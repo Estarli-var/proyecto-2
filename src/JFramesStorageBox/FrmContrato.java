@@ -7,16 +7,34 @@ import JFramesStorageBox.FrmBuscarContrato;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import modelos.Servicio;
+import modelos.Contrato;
 import Controladores.controladorServicios;
+import Controladores.controladorContrato;
+import Controladores.ControladorCliente;
+import Controladores.ControladorEspacio;
+import Enums.TipoHabitacion;
+import excepciones.cambioEstadoInvalidoException;
+import excepciones.espacioNoDisponibleException;
+import excepciones.fechaInvalidaException;
+import interfaces.IView;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import lists.EspaciosList;
+import modelos.Cliente;
+import modelos.Espacio;
 /**
  *
  * @author Aaron Diaz
  */
-public class FrmContrato extends javax.swing.JFrame {
+public class FrmContrato extends javax.swing.JFrame implements IView<Contrato>  {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmContrato.class.getName());
     private DefaultTableModel modeloTabla;
     private ArrayList<Servicio> servicioSeleccionados;
+    private controladorContrato controlador;
+    private Contrato contratoActual;
+    private Cliente clienteValidado;
+    private Espacio espacioAsignado;
     /**
      * Creates new form FrmContratos
      */
@@ -25,9 +43,12 @@ public class FrmContrato extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         modeloTabla = (DefaultTableModel) tblServiciosContrato.getModel();
         modeloTabla.setRowCount(0);
-        
         servicioSeleccionados = new ArrayList<>();
         cargarComboServicios();
+        controlador = controladorContrato.getInstance();
+        controlador.setControladorCliente(ControladorCliente.getInstance());
+        controlador.setControladorEspacio(ControladorEspacio.getInstance());
+        
     }
 
     /**
@@ -65,6 +86,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnAgregarServicio = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblServiciosContrato = new javax.swing.JTable();
+        btnQuitarServicio = new javax.swing.JButton();
         pnlCostos = new javax.swing.JPanel();
         jplSubtotal = new javax.swing.JPanel();
         lblTituloSubTotal = new javax.swing.JLabel();
@@ -144,6 +166,7 @@ public class FrmContrato extends javax.swing.JFrame {
         btnValidarCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnValidarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/garrapata (1).png"))); // NOI18N
         btnValidarCliente.setText("Validar");
+        btnValidarCliente.addActionListener(this::btnValidarClienteActionPerformed);
 
         lblNombreCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -232,10 +255,12 @@ public class FrmContrato extends javax.swing.JFrame {
 
         dateFechaInicio.setDateFormatString("dd/MM/yyyy");
         dateFechaInicio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        dateFechaInicio.setLocale(new java.util.Locale("es", "CR"));
 
         dateFechaFinal.setToolTipText("\n");
         dateFechaFinal.setDateFormatString("dd/MM/yyyy");
         dateFechaFinal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        dateFechaInicio.setLocale(new java.util.Locale("es", "CR"));
 
         lblDiasPeriodos.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblDiasPeriodos.setText("Días: - / Periodos: -");
@@ -294,29 +319,30 @@ public class FrmContrato extends javax.swing.JFrame {
         btnAgregarServicio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnAgregarServicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/signo-positivo.png"))); // NOI18N
         btnAgregarServicio.setText(" Agregar");
+        btnAgregarServicio.addActionListener(this::btnAgregarServicioActionPerformed);
 
         jScrollPane1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         tblServiciosContrato.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         tblServiciosContrato.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Servicio", "Precio", "Quitar"
+                "Servicio", "Precio"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -328,6 +354,11 @@ public class FrmContrato extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tblServiciosContrato);
+
+        btnQuitarServicio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnQuitarServicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/senal-de-stop.png"))); // NOI18N
+        btnQuitarServicio.setText("Eliminar");
+        btnQuitarServicio.addActionListener(this::btnQuitarServicioActionPerformed);
 
         javax.swing.GroupLayout pnlServiciosLayout = new javax.swing.GroupLayout(pnlServicios);
         pnlServicios.setLayout(pnlServiciosLayout);
@@ -341,6 +372,8 @@ public class FrmContrato extends javax.swing.JFrame {
                         .addComponent(cmbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnAgregarServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnQuitarServicio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -348,9 +381,10 @@ public class FrmContrato extends javax.swing.JFrame {
             pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlServiciosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlServiciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAgregarServicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmbServicios))
+                    .addComponent(btnQuitarServicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                 .addContainerGap())
@@ -478,21 +512,22 @@ public class FrmContrato extends javax.swing.JFrame {
         btnCrear.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/crear.png"))); // NOI18N
         btnCrear.setText("Crear");
+        btnCrear.addActionListener(this::btnCrearActionPerformed);
 
         btnActivar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnActivar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/boton-de-play.png"))); // NOI18N
         btnActivar.setText("Activar");
-        btnActivar.setEnabled(false);
+        btnActivar.addActionListener(this::btnActivarActionPerformed);
 
         btnFinalizar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnFinalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/bandera.png"))); // NOI18N
         btnFinalizar.setText("Finalizar");
-        btnFinalizar.setEnabled(false);
+        btnFinalizar.addActionListener(this::btnFinalizarActionPerformed);
 
         btnCancelarContrato.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnCancelarContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/senal-de-stop.png"))); // NOI18N
         btnCancelarContrato.setText("Cancelar");
-        btnCancelarContrato.setEnabled(false);
+        btnCancelarContrato.addActionListener(this::btnCancelarContratoActionPerformed);
 
         btnBuscarContrato.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnBuscarContrato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/buscar.png"))); // NOI18N
@@ -591,6 +626,169 @@ public class FrmContrato extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdentificacionClienteKeyTyped
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        clear();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        try{
+            Date fechaInicio = dateFechaInicio.getDate();
+            Date fechaFin = dateFechaFinal.getDate();
+            Contrato nuevo = controlador.crearContrato(fechaInicio, fechaFin);
+            if(clienteValidado != null) {
+                controlador.asignarCliente(nuevo, clienteValidado);
+            }
+            
+            if (espacioAsignado != null) {
+                try{
+                    controlador.asignarEspacio(nuevo, espacioAsignado);
+                }catch(espacioNoDisponibleException e){
+                    showError(e.getMessage());
+                }
+            }
+            
+            for (Servicio servi : servicioSeleccionados) {
+                controlador.agregarServicio(nuevo, servi);
+            }          
+            controlador.calcularCostos(nuevo);
+            showData(nuevo);                        
+        }catch(fechaInvalidaException e){
+            showError(e.getMessage());
+        }
+    }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void btnActivarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActivarActionPerformed
+         if (contratoActual == null) {
+            showMessage("Primero debe crear un contrato.");
+            return;
+        }
+        try {
+            controlador.activarContrato(contratoActual);
+            lblEstado.setText(contratoActual.getEstado().toString());
+            showMessage("Contrato activado correctamente");
+        } catch (cambioEstadoInvalidoException e) {
+            showError(e.getMessage());
+        }
+    }//GEN-LAST:event_btnActivarActionPerformed
+
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
+        if (contratoActual == null) {
+            JOptionPane.showMessageDialog(this, "Primero debe crear un contrato.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            controlador.finalizarContrato(contratoActual);
+            lblEstado.setText(contratoActual.getEstado().toString());
+            showMessage("Contrato finalizado correctamente");
+        } catch (cambioEstadoInvalidoException e) {
+            showError(e.getMessage());
+        }
+    }//GEN-LAST:event_btnFinalizarActionPerformed
+
+    private void btnCancelarContratoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarContratoActionPerformed
+        if (contratoActual == null) {
+            JOptionPane.showMessageDialog(this, "Primero debe crear un contrato.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            controlador.cancelarContrato(contratoActual);
+            lblEstado.setText(contratoActual.getEstado().toString());
+            showMessage("Contrato cancelado correctamente");
+        } catch (cambioEstadoInvalidoException e) {
+            showError(e.getMessage());
+        }
+    }//GEN-LAST:event_btnCancelarContratoActionPerformed
+
+    private void btnAgregarServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarServicioActionPerformed
+        Servicio seleccionado = (Servicio) cmbServicios.getSelectedItem();
+
+        if (seleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un servicio primero.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (servicioSeleccionados.contains(seleccionado)) {
+            JOptionPane.showMessageDialog(this, "Ese servicio ya fue agregado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        servicioSeleccionados.add(seleccionado);
+        modeloTabla.addRow(new Object[]{
+        seleccionado.getNombre(),
+        String.format("₡%,.0f", seleccionado.getPrecio())
+        });
+    }//GEN-LAST:event_btnAgregarServicioActionPerformed
+
+    private void btnQuitarServicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarServicioActionPerformed
+       int fila = tblServiciosContrato.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un servicio de la tabla para quitar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        servicioSeleccionados.remove(fila);
+        modeloTabla.removeRow(fila);
+    }//GEN-LAST:event_btnQuitarServicioActionPerformed
+
+    private void btnValidarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarClienteActionPerformed
+        String identificacion = txtIdentificacionCliente.getText().trim();
+        if (identificacion.isEmpty()) {
+            showError("Ingrese una identificación");
+            return;
+        }
+        Cliente encontrado = controlador.validarCliente(identificacion);
+        if (encontrado != null) {
+            clienteValidado = encontrado;
+            lblNombreCliente.setText(encontrado.getNombre());
+        }else{
+            clienteValidado = null;
+            lblNombreCliente.setText("");
+            showError("Cliente no encontrado. Registrelo primero en el módulo de cliente");
+        }
+    }//GEN-LAST:event_btnValidarClienteActionPerformed
+
+    private void btnBuscarDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDisponibleActionPerformed
+        Date fechaInicio = dateFechaInicio.getDate();
+        Date fechaFin = dateFechaFinal.getDate();
+        
+        if (fechaInicio == null || fechaFin == null) {
+            showError("Seleccione primero las fecha");
+            return;
+        }
+        TipoHabitacion tipo = obtenerTipoSeleccionado();
+        ArrayList<Espacio> disponibles = controlador.buscarEspacioDisponible(tipo, fechaInicio, fechaFin);
+        if (disponibles.isEmpty()) {
+            espacioAsignado = null;
+            lblEspacioAsignado.setText("Espacio asignado: ninguno disponible");
+            showError("No hay espacios de tipo " + tipo.getNombre() + " disponibles en esas fechas.");
+            return;
+        }
+        espacioAsignado = disponibles.get(0);
+        lblEspacioAsignado.setText("Espacio asignado: #" + espacioAsignado.getNumero()
+            + " (" + disponibles.size() + " disponibles)");
+        showMessage("Se encontraron " + disponibles.size() 
+            +" espacios disponibles. Asignado: #" + espacioAsignado.getNumero());
+    }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
+   
+    private void cargarComboServicios(){
+        cmbServicios.removeAllItems();
+        for (Servicio servi : controladorServicios.getInstance().obtenerTodos()) {
+            cmbServicios.addItem(servi);
+        }
+    }
+    
+    private TipoHabitacion obtenerTipoSeleccionado(){
+        String texto = (String) cmbTipoEspacio.getSelectedItem();
+        switch (texto) {
+            case "Pequeño":
+                return TipoHabitacion.PEQUENO;
+            case "Mediano":
+                return TipoHabitacion.MEDIANO;
+            case "Grande":
+                return TipoHabitacion.GRANDE;
+            default:
+                return null;
+        }
+    }
+     
+    @Override
+    public void clear() {
         txtIdentificacionCliente.setText("");
         lblNombreCliente.setText("");
         cmbTipoEspacio.setSelectedIndex(0);
@@ -603,21 +801,35 @@ public class FrmContrato extends javax.swing.JFrame {
         lblTotal.setText("₡0");
         lblEstado.setText("Sin contrato");
         lblNumeroContrato.setText("-");
-        //todo; limpiar tblServiciosContratos cuando este conectado el modelo defaulttablemodel
-    }//GEN-LAST:event_btnLimpiarActionPerformed
-
-    private void btnBuscarDisponibleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarDisponibleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarDisponibleActionPerformed
-    private void cargarComboServicios(){
-        cmbServicios.removeAllItems();
-        for (Servicio servi : controladorServicios.getInstance().obtenerTodos()) {
-            cmbServicios.addItem(servi);
-        }
+        modeloTabla.setRowCount(0);
+        servicioSeleccionados.clear();
+        contratoActual = null;
+        clienteValidado = null;
+        espacioAsignado = null;
     }
-    /**
-     * @param args the command line arguments
-     */
+    
+    @Override
+    public void showError(String error) {
+        JOptionPane.showMessageDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Información", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    @Override
+    public void showData(Contrato data) {
+        contratoActual = data;
+        lblNumeroContrato.setText("" + data.getNumeroContrato());
+        lblEstado.setText(data.getEstado().toString());
+        lblSubTotal.setText("₡" + (int) data.getSubTotal());
+        lblImpuesto.setText("₡" + (int) data.getImpuesto());
+        lblTotal.setText("₡" + (int) data.getTotal());
+        lblDiasPeriodos.setText("Días: " + controlador.obtenerDias(data)
+            + "/ Periodos: " + controlador.obtenerPeriodos(data));
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -649,6 +861,7 @@ public class FrmContrato extends javax.swing.JFrame {
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnFinalizar;
     private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnQuitarServicio;
     private javax.swing.JButton btnValidarCliente;
     private javax.swing.JComboBox<Object> cmbServicios;
     private javax.swing.JComboBox<String> cmbTipoEspacio;

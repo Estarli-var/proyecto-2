@@ -3,15 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package JFramesStorageBox;
-
+import Controladores.controladorContrato;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelos.Contrato;
 /**
  *
  * @author Aaron Diaz
  */
 public class FrmBuscarContrato extends javax.swing.JDialog {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmBuscarContrato.class.getName());
-
+    private controladorContrato controlador;
+    private DefaultTableModel modeloTabla;
+    private Contrato contratoSeleccionado;
     /**
      * Creates new form FrmBuscarContrato
      */
@@ -19,6 +25,10 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(null);
+        controlador = controladorContrato.getInstance();
+        modeloTabla =(DefaultTableModel) tblContratos.getModel();
+        modeloTabla.setRowCount(0);
+        cargarTabla(controlador.listarTodos());
     }
 
     /**
@@ -78,6 +88,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
 
         btnFiltrar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnFiltrar.setText("Filtrar");
+        btnFiltrar.addActionListener(this::btnFiltrarActionPerformed);
 
         txtFiltroCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtFiltroCliente.setToolTipText("Ingrese el Nombre o Identificacion");
@@ -204,6 +215,7 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
 
         btnAceptar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(this::btnAceptarActionPerformed);
         pnlBotonesBusqueda.add(btnAceptar);
 
         btnCancelarBusqueda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -237,13 +249,77 @@ public class FrmBuscarContrato extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCancelarBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarBusquedaActionPerformed
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        String numeroTexto = txtFiltroNumero.getText().trim();
+        String clienteTexto = txtFiltroCliente.getText().trim();
+        String espacioSeleccionado = (String) cmbFiltroEspacio.getSelectedItem();
+        String estadoSeleccionado = (String) cmbFiltroEstado.getSelectedItem();
+        Date fecha = dtcFecha.getDate();
+        
+        ArrayList<Contrato> resultado;
+        
+        if (!numeroTexto.isEmpty()) {
+            Contrato contra = controlador.buscarPorNumero(Integer.parseInt(numeroTexto));
+            resultado = new ArrayList<>();
+            if (contra != null) {
+                resultado.add(contra);
+            }
+        }else if(!clienteTexto.isEmpty()){
+            resultado = controlador.filtrarPorCliente(clienteTexto);
+        }else if(fecha != null){
+            resultado = controlador.filtrarPorFecha(fecha);
+        }else if(!"Todos".equals(estadoSeleccionado)){
+            resultado = controlador.filtrarPorEstado(estadoSeleccionado);
+        }else if(!"Todos".equals(espacioSeleccionado)){
+            resultado = controlador.listarTodos();
+        }else{
+            resultado = controlador.listarTodos();
+        }
+        
+        cargarTabla(resultado);
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        int fila = tblContratos.getSelectedRow();
+        
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un contrato", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int numero = (int) modeloTabla.getValueAt(fila, 0);
+        contratoSeleccionado = controlador.buscarPorNumero(numero);
         dispose();
+    }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void btnCancelarBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarBusquedaActionPerformed
+       dispose();
     }//GEN-LAST:event_btnCancelarBusquedaActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    private void cargarTabla(ArrayList<Contrato> contratos){
+        modeloTabla.setRowCount(0);
+        
+        for (Contrato contra : contratos) {
+            String identificacion = "";
+            String nombreCliente = " ";
+            String espacio = " ";
+            
+            if (contra.getCliente() != null) {
+                identificacion = contra.getCliente().getIdentificacion();
+                nombreCliente = contra.getCliente().getNombre();
+            }
+            
+            if (contra.getEspacio() != null) {
+                espacio = "" + contra.getEspacio().getNumero();
+            }
+            
+            modeloTabla.addRow(new Object[]{
+                contra.getNumeroContrato(), identificacion, nombreCliente, espacio, contra.getFechaInicio(), contra.getEstado().toString()
+            });
+        }
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
