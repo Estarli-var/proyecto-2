@@ -15,10 +15,22 @@ import java.util.ArrayList;
  */
 public class ControladorCliente {
 
+    private static ControladorCliente instancia;
+
     private final ArrayList<Cliente> clientes;
 
-    public ControladorCliente(ArrayList<Cliente> listaClientes) {
-        clientes = listaClientes;
+    // Constructor privado
+    private ControladorCliente() {
+        clientes = new ArrayList<>();
+    }
+
+    // Método para obtener la única instancia
+    public static ControladorCliente getInstancia() {
+        if (instancia == null) {
+            instancia = new ControladorCliente();
+        }
+
+        return instancia;
     }
 
     public ArrayList<Cliente> getClientes() {
@@ -51,30 +63,35 @@ public class ControladorCliente {
         return cliente != null;
     }
 
-    public Cliente buscarCliente(String identificacion){
+    public Cliente buscarCliente(String identificacion) {
         try {
             for (Cliente cliente : clientes) {
                 if (cliente.getIdentificacion().equals(identificacion)) {
                     return cliente;
                 }
             }
+
             throw new Exception("No se encontro el cliente");
+
         } catch (Exception e) {
             return null;
         }
-
     }
 
-    public void actualizarCliente(String identificacion, int numero, String nombre, String correo) {
+    public void actualizarCliente(
+            String identificacion,
+            int numero,
+            String nombre,
+            String correo) {
+
         Cliente cliente = buscarCliente(identificacion);
+
         cliente.setNumero(numero);
         cliente.setCorreo(correo);
         cliente.setNombre(nombre);
-
     }
 
     public void quitarCliente(Cliente cliente) {
-        
         clientes.remove(cliente);
     }
 
