@@ -19,12 +19,12 @@ public class ControladorCliente {
 
     private final ArrayList<Cliente> clientes;
 
-    // Constructor privado
+  
     private ControladorCliente() {
         clientes = new ArrayList<>();
     }
 
-    // Método para obtener la única instancia
+    
     public static ControladorCliente getInstancia() {
         if (instancia == null) {
             instancia = new ControladorCliente();
