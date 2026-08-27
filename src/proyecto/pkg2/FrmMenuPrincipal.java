@@ -14,7 +14,8 @@ import JFramesStorageBox.FrmContrato;
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMenuPrincipal.class.getName());
-
+    private lists.EmpleadoList listaEmpleados = new lists.EmpleadoList();
+    private Controladores.controladorEmpleado controladorEmp = new Controladores.controladorEmpleado(listaEmpleados);
     /**
      * Creates new form FrmMenuPrincipal
      */
@@ -468,7 +469,9 @@ public class FrmMenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlServiciosMouseClicked
 
     private void pnlEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlEmpleadosMouseClicked
+
         resaltarFila(pnlEmpleados, pnlFranjaEmpleados, lblFlechaEmpleados);
+        new JFramesStorageBox.FrmEmpleado(controladorEmp).setVisible(true);
     }//GEN-LAST:event_pnlEmpleadosMouseClicked
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
