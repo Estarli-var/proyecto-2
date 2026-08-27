@@ -17,17 +17,14 @@ import java.util.Iterator;
  */
 public class ControladorEspacio {
     
-    // 1. Variable estática privada para la única instancia
     private static ControladorEspacio instancia;
     
     private KeyDynamicsLists<Espacio, Integer> listaEspacio;
 
-    // 2. Constructor privado
     private ControladorEspacio() {
         this.listaEspacio = new EspaciosList();
     }
 
-    // 3. Método estático público de acceso
     public static ControladorEspacio getInstancia() {
         if (instancia == null) {
             instancia = new ControladorEspacio();
