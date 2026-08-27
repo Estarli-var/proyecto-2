@@ -2,8 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package JFramesStorageBox;
-
+ package JFramesStorageBox;
+ import Controladores.ControladorEspacio;
 /**
  *
  * @author emalv
@@ -11,14 +11,30 @@ package JFramesStorageBox;
 public class FrmEspacio extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEspacio.class.getName());
-
+    private ControladorEspacio controladorr;
     /**
      * Creates new form FrmEspacio
      */
-    public FrmEspacio() {
-        initComponents();
+    public FrmEspacio(estructuras.KeyDynamicsLists<modelos.Espacio, Integer> listaEspacio) {
+     initComponents(); 
+     this.controladorr = new ControladorEspacio();
     }
+    public FrmEspacio() {
+     initComponents(); 
+     this.controladorr = new ControladorEspacio();
 
+    }
+    public void cargarDatosEspacio(modelos.Espacio espacio) {
+    if (espacio != null) {
+        txtNumero.setText(String.valueOf(espacio.getNumero()));
+        if (espacio.getTipo() != null) {
+            cbxTipo.setSelectedItem(espacio.getTipo().name());
+        }
+        txtTamano.setText(String.valueOf(espacio.getTamano()));
+        txtPrecio.setText(String.valueOf(espacio.getPrecio()));
+    }
+}
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,7 +72,7 @@ public class FrmEspacio extends javax.swing.JFrame {
 
         jLabel2.setText("Número de Espacio:");
 
-        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pequeño", "Mediano", "Grande" }));
+        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pequeno", "Mediano", "Grande" }));
         cbxTipo.setToolTipText("");
 
         jLabel3.setText("Tipo de Espacio:");
@@ -72,14 +88,19 @@ public class FrmEspacio extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(this::btnActualizarActionPerformed);
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -96,7 +117,7 @@ public class FrmEspacio extends javax.swing.JFrame {
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,6 +200,7 @@ public class FrmEspacio extends javax.swing.JFrame {
 
     private void txtNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtNumeroActionPerformed
 
     private void txtTamanoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTamanoActionPerformed
@@ -188,6 +210,82 @@ public class FrmEspacio extends javax.swing.JFrame {
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        if (txtNumero.getText().trim().isEmpty() || txtTamano.getText().trim().isEmpty() || txtPrecio.getText().trim().isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Atención", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        int numero = Integer.parseInt(txtNumero.getText().trim());
+        double tamano = Double.parseDouble(txtTamano.getText().trim());
+        double precio = Double.parseDouble(txtPrecio.getText().trim());
+        Enums.TipoHabitacion tipo = Enums.TipoHabitacion.valueOf(cbxTipo.getSelectedItem().toString().toUpperCase());
+
+        controladorr.agregarEspacio(numero, tipo, tamano, precio);
+        javax.swing.JOptionPane.showMessageDialog(this, "Espacio registrado exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    } catch (Exception ex) {
+        javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        FrmBuscarEspacio frmBusqueda = new FrmBuscarEspacio(this, controladorr);
+        frmBusqueda.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // TODO add your handling code here:
+        if (txtNumero.getText().trim().isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Debe ingresar el número del espacio a actualizar.", "Atención", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    try {
+        int numero = Integer.parseInt(txtNumero.getText().trim());
+        double tamano = Double.parseDouble(txtTamano.getText().trim());
+        double precio = Double.parseDouble(txtPrecio.getText().trim());
+        Enums.TipoHabitacion tipo = Enums.TipoHabitacion.valueOf(cbxTipo.getSelectedItem().toString().toUpperCase());
+
+        controladorr.actualizarEspacio(numero, tipo, tamano, precio);
+        javax.swing.JOptionPane.showMessageDialog(this, "Espacio actualizado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    } catch (Exception ex) {
+        javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        if (txtNumero.getText().trim().isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Debe ingresar el número de espacio a eliminar.", "Atención", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    int confirmacion = javax.swing.JOptionPane.showConfirmDialog(this, 
+        "¿Desea eliminar el espacio número " + txtNumero.getText() + "?", 
+        "Confirmar Eliminación", javax.swing.JOptionPane.YES_NO_OPTION);
+        
+    if (confirmacion == javax.swing.JOptionPane.YES_OPTION) {
+        try {
+            int numero = Integer.parseInt(txtNumero.getText().trim());
+            controladorr.eliminarEspacio(numero);
+            javax.swing.JOptionPane.showMessageDialog(this, "Espacio eliminado exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al Eliminar", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        txtNumero.setText("");
+        cbxTipo.setSelectedIndex(0);
+        txtTamano.setText("");
+        txtPrecio.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     /**
      * @param args the command line arguments
