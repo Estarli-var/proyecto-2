@@ -26,16 +26,17 @@ public class FrmCliente extends javax.swing.JFrame {
     /**
      * Creates new form FrmCliente
      */
-    public FrmCliente() {
-        initComponents();
-    }
+public FrmCliente() {
+    initComponents();
 
-    public FrmCliente(ArrayList<Cliente> listaClientes) {
-        initComponents();
-        ctrCliente = new ControladorCliente(listaClientes);
-        BuscarClienteFRM = new FrmBuscarCliente(this, listaClientes, ctrCliente);
-    }
+    ctrCliente = ControladorCliente.getInstancia();
 
+    BuscarClienteFRM = new FrmBuscarCliente(
+        this,
+        ctrCliente.getClientes(),
+        ctrCliente
+    );
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
