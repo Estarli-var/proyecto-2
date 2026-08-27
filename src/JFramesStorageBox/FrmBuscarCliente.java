@@ -20,10 +20,11 @@ import modelos.Cliente;
  */
 public class FrmBuscarCliente extends javax.swing.JFrame {
 
-    public ArrayList<Cliente> listaClientes;
     private ControladorCliente ctrCliente;
     private String[] datosSeleccionados;
     private FrmCliente frmcliente;
+    public ArrayList<Cliente> listaClientes;
+
     /**
      * Creates new form FrmBuscarCliente
      * @param frmcliente
@@ -32,10 +33,10 @@ public class FrmBuscarCliente extends javax.swing.JFrame {
         initComponents();
     }
 
-    public FrmBuscarCliente(FrmCliente frmcliente) {
+    public FrmBuscarCliente(FrmCliente frmcliente, ArrayList<Cliente> listaClientes, ControladorCliente ctrCliente) {
         initComponents();
-        this.listaClientes = new ArrayList<>();
-        this.ctrCliente = new ControladorCliente();
+        this.listaClientes = listaClientes;
+        this.ctrCliente = ctrCliente;
         this.datosSeleccionados = new String[5];
         this.frmcliente = frmcliente;
     }
@@ -98,6 +99,11 @@ public class FrmBuscarCliente extends javax.swing.JFrame {
         jLabel2.setText("Buscar (Nombre/Cedula):");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         tblCliente.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         tblCliente.setModel(new javax.swing.table.DefaultTableModel(
@@ -241,6 +247,60 @@ public class FrmBuscarCliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        ArrayList<Cliente> listaClientes = new ArrayList<>();
+        DefaultTableModel modelo = (DefaultTableModel) this.tblCliente.getModel();
+        modelo.setRowCount(0);
+        
+        String texto = this.txtBuscar.getText().trim().toLowerCase();
+        try {
+            Integer.valueOf(texto);
+            listaClientes = FiltrarCedula(texto);
+        } catch (NumberFormatException e) {
+            listaClientes = FiltrarNombre(texto);
+        }
+        
+        for (Cliente c : listaClientes) {
+            String identificacion = c.getIdentificacion();
+            String nombre = c.getNombre();
+            String Fecha_nac = c.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            String edad = String.valueOf(ctrCliente.calcularEdad(c));
+            String numero = String.valueOf(c.getNumero());
+            String correo = c.getCorreo();
+            
+            modelo.addRow(new String[]{
+                identificacion, nombre, Fecha_nac, edad, numero, correo
+            });
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private ArrayList<Cliente> FiltrarCedula(String txtBuscar){
+        ArrayList<Cliente> filtrados = new ArrayList<>();
+
+        String buscar = txtBuscar;
+        for (Cliente c : this.listaClientes) {
+            if (c.getIdentificacion().toLowerCase().contains(buscar)) {
+                filtrados.add(c);
+            }
+        }
+        return filtrados;
+    }
+     
+    
+    
+    private ArrayList<Cliente> FiltrarNombre(String txtBuscar){
+        ArrayList<Cliente> filtrados = new ArrayList<>();
+
+        String buscar = txtBuscar;
+        for (Cliente c : this.listaClientes) {
+            if (c.getNombre().toLowerCase().contains(buscar)) {
+                filtrados.add(c);
+            }
+        }
+        return filtrados;
+    }
+    
     /**
      * @param args the command line arguments
      */
