@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import modelos.Cliente;
@@ -21,15 +22,18 @@ public class FrmCliente extends javax.swing.JFrame {
 
     private FrmBuscarCliente BuscarClienteFRM;
     private ControladorCliente ctrCliente;
-    
+
     /**
      * Creates new form FrmCliente
      */
     public FrmCliente() {
         initComponents();
-        ctrCliente = new ControladorCliente();
-        BuscarClienteFRM = new FrmBuscarCliente(this);
-        
+    }
+
+    public FrmCliente(ArrayList<Cliente> listaClientes) {
+        initComponents();
+        ctrCliente = new ControladorCliente(listaClientes);
+        BuscarClienteFRM = new FrmBuscarCliente(this, listaClientes, ctrCliente);
     }
 
     /**
@@ -60,7 +64,7 @@ public class FrmCliente extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -85,8 +89,18 @@ public class FrmCliente extends javax.swing.JFrame {
         });
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -265,26 +279,34 @@ public class FrmCliente extends javax.swing.JFrame {
             String nombre = this.txtNombre.getText();
             Date fecha = this.dateFechaNacinimiento.getDate();
             LocalDate fecha_nac = fecha.toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate();
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
             String telefono = this.txtTelefono.getText();
             String correo = this.txtCorreo.getText();
-            
-            if (identificacion == null || nombre == null || fecha_nac == null){
+
+            if (identificacion == null || nombre == null || fecha_nac == null) {
                 throw new Exception("Tanto la identificacion, nombre y fecha de nacimiento son obligatorias");
             }
-            
+
             boolean respuesta_val1 = ctrCliente.validarIdentificacion(identificacion);
-            
+
             if (respuesta_val1) {
                 throw new Exception("Ya existe ese cliente");
             }
-            
+
             Cliente c = new Cliente(identificacion, nombre, fecha_nac, Integer.parseInt(telefono), correo);
+
+            this.ctrCliente.calcularEdad(c);
+
             ctrCliente.agregarCliente(c);
-            
-            
-            
+            this.LimpiarDatos();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "El cliente se agregó correctamente.",
+                    "Confirmación",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
         }
@@ -292,7 +314,7 @@ public class FrmCliente extends javax.swing.JFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
-        
+
         try {
             String identificacion = this.txtIdentificacion.getText();
             boolean respuesta_val1 = ctrCliente.validarIdentificacion(identificacion);
@@ -301,10 +323,61 @@ public class FrmCliente extends javax.swing.JFrame {
             }
             Cliente c = ctrCliente.buscarCliente(identificacion);
             ctrCliente.quitarCliente(c);
+            this.LimpiarDatos();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "El cliente se elimino correctamente.",
+                    "Confirmación",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        this.LimpiarDatos();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // TODO add your handling code here:
+        try {
+            String identificacion = this.txtIdentificacion.getText();
+            boolean respuesta_val1 = ctrCliente.validarIdentificacion(identificacion);
+            if (!respuesta_val1) {
+                throw new Exception("No existe ese cliente");
+            }
+            String telefono = this.txtTelefono.getText();
+            String correo = this.txtCorreo.getText();
+            String nombre = this.txtNombre.getText();
+
+            Cliente c = ctrCliente.buscarCliente(identificacion);
+
+            if (c.getNumero() == Integer.parseInt(telefono) && c.getCorreo().equals(correo) && c.getNombre().equals(nombre)) {
+                throw new Exception("No se actulizo ningun dato");
+            }
+
+            ctrCliente.actualizarCliente(identificacion, Integer.parseInt(telefono), nombre, correo);
+            this.LimpiarDatos();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "El cliente se actualizo correctamente.",
+                    "Confirmación",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void LimpiarDatos() {
+        this.txtCorreo.setText("");
+        this.txtIdentificacion.setText("");
+        this.txtNombre.setText("");
+        this.txtTelefono.setText("");
+        this.dateFechaNacinimiento.setDate(null);
+    }
 
     /**
      * @param args the command line arguments
