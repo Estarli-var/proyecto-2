@@ -7,6 +7,7 @@ package proyecto.pkg2;
 import JFramesStorageBox.FrmCliente;
 import JFramesStorageBox.FrmServicios;
 import JFramesStorageBox.FrmContrato;
+import JFramesStorageBox.FrmEspacio;
 import java.util.ArrayList;
 import modelos.Cliente;
 
@@ -16,6 +17,7 @@ import modelos.Cliente;
  */
 public class FrmMenuPrincipal extends javax.swing.JFrame {
     
+
 private lists.EmpleadoList listaEmpleados = new lists.EmpleadoList();
 
 private Controladores.controladorEmpleado controladorEmp =
@@ -35,6 +37,14 @@ public FrmMenuPrincipal() {
 
     frmcliente = new FrmCliente();
 }
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmMenuPrincipal.class.getName());
+
+   
+    /**
+     * Creates new form FrmMenuPrincipal
+     */
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -464,12 +474,13 @@ public FrmMenuPrincipal() {
 
     private void pnlClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlClientesMouseClicked
         resaltarFila(pnlClientes, pnlFranjaClientes,  lblFlechaClientes);
-        this.frmcliente.setVisible(true);
+        new FrmCliente().setVisible(true);
         
     }//GEN-LAST:event_pnlClientesMouseClicked
 
     private void pnlEspaciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlEspaciosMouseClicked
         resaltarFila(pnlEspacios, pnlFranjaEspacios,  lblFlechaEspacios);
+        new FrmEspacio().setVisible(true);
     }//GEN-LAST:event_pnlEspaciosMouseClicked
 
     private void pnlContratosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlContratosMouseClicked

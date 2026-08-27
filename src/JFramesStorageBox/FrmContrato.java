@@ -46,9 +46,8 @@ public class FrmContrato extends javax.swing.JFrame implements IView<Contrato>  
         servicioSeleccionados = new ArrayList<>();
         cargarComboServicios();
         controlador = controladorContrato.getInstance();
-        controlador.setControladorCliente(ControladorCliente.getInstance());
-        controlador.setControladorEspacio(ControladorEspacio.getInstance());
-        
+        controlador.setControladorCliente(ControladorCliente.getInstancia());
+        controlador.setControladorEspacio(ControladorEspacio.getInstancia());
     }
 
     /**
