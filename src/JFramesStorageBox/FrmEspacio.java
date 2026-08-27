@@ -17,11 +17,11 @@ public class FrmEspacio extends javax.swing.JFrame {
      */
     public FrmEspacio(estructuras.KeyDynamicsLists<modelos.Espacio, Integer> listaEspacio) {
      initComponents(); 
-     this.controladorr = new ControladorEspacio();
+     this.controladorr = ControladorEspacio.getInstancia();
     }
     public FrmEspacio() {
      initComponents(); 
-     this.controladorr = new ControladorEspacio();
+     this.controladorr = ControladorEspacio.getInstancia();
 
     }
     public void cargarDatosEspacio(modelos.Espacio espacio) {
@@ -274,7 +274,7 @@ public class FrmEspacio extends javax.swing.JFrame {
             controladorr.eliminarEspacio(numero);
             javax.swing.JOptionPane.showMessageDialog(this, "Espacio eliminado exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al Eliminar", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al eliminar", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
     }//GEN-LAST:event_btnEliminarActionPerformed
